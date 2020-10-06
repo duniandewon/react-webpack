@@ -1,9 +1,21 @@
 import React from 'react';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import store from './store';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-const ReduxProvider = ({ children }) => (
-  <Provider store={store}>{children}</Provider>
-);
+import rootReducer from './reducers';
+
+const ReduxProvider = ({ children, initialState = {} }) => {
+  const middleware = [thunk];
+
+  const store = createStore(
+    rootReducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(...middleware))
+  );
+
+  return <Provider store={store}>{children}</Provider>;
+};
 
 export default ReduxProvider;
